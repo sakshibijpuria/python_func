@@ -20,7 +20,8 @@ def get_social_media_handles(url):
     social_media_handles = {}
     
     # Find social media links
-    social_media_links = driver.find_elements(By.CSS_SELECTOR, 'a[href*="facebook.com"], a[href*="twitter.com"], a[href*="instagram.com"], a[href*="linkedin.com"]')
+    social_media_selector = 'a[href*="facebook.com"], a[href*="twitter.com"], a[href*="instagram.com"], a[href*="linkedin.com"]'
+    social_media_links = driver.find_elements(By.CSS_SELECTOR, social_media_selector)
     
     # Extract social media handles from the URLs and store them in the dictionary
     for link in social_media_links:

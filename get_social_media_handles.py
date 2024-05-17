@@ -2,6 +2,9 @@
 import requests
 import re
 
+# Constant for social media platforms
+SOCIAL_MEDIA_PLATFORMS = ['facebook', 'twitter', 'instagram', 'linkedin']
+
 def get_social_media_handles(url):
     """Get social media handles from a webpage.
     
@@ -11,23 +14,16 @@ def get_social_media_handles(url):
     Returns:
         dict: A dictionary containing social media handles for each platform.
     """
-    # Local function to generate regex pattern for social media URLs
-    def generate_regex_pattern():
-        """Generate regex pattern for social media URLs.
-        
-        Returns:
-            str: The regex pattern for social media URLs.
-        """
-        return r'(https?://(?:www\.)?(facebook\.com|twitter\.com|instagram\.com|linkedin\.com)/[^/?"]+)'
+    platforms_regex = '|'.join(SOCIAL_MEDIA_PLATFORMS)
+    regex_pattern = rf'(https?://(?:www\.)?({platforms_regex})\.com/[^/?"]+)'
 
     response = requests.get(url)
-    
+
     if response.status_code == 200:
         content = response.text
         social_media_handles = {}
-        regex = generate_regex_pattern()
-        matches = re.findall(regex, content)
-        
+        matches = re.findall(regex_pattern, content)
+
         # If any matches are found, add them to the social media handles dictionary
         if matches:
             for match in matches:
@@ -35,7 +31,7 @@ def get_social_media_handles(url):
                 if platform not in social_media_handles:
                     social_media_handles[platform] = []
                 social_media_handles[platform].append(match[0])
-        
+
         return social_media_handles
     else:
         return {'error': f"Failed to fetch data from {url} with response {response.status_code}"}
